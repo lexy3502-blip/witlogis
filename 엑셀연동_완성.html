@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>운송료 대시보드</title>
+<style>
+body{font-family:sans-serif;background:#f5f6fa;padding:30px;}
+.container{max-width:1000px;margin:auto;background:#fff;padding:20px;border-radius:10px;}
+input{padding:10px;width:250px;}
+button{padding:10px 15px;margin-left:10px;}
+table{width:100%;margin-top:20px;border-collapse:collapse;}
+td,th{border:1px solid #ddd;padding:8px;text-align:center;}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>차량번호 뒤 4자리를 입력하세요</h2>
+<input id="search" placeholder="예: 7099">
+<button onclick="search()">검색</button>
+<div id="result"></div>
+</div>
+
+<script>
+const data = [{"vehicle": "경기84아 7099", "routes": [{"from": "하늘푸드 2회", "to": "이엔피 리치", "fee": 3900000}, {"from": "이엔피 리치", "to": "CJ수원", "fee": 3800000}, {"from": "태무통신료", "to": "통신료", "fee": 1000000}]}, {"vehicle": "경기90자 5137", "routes": [{"from": "하늘푸드 2회", "to": "이엔피 리치", "fee": 3200000}, {"from": "이엔피 리치", "to": "삼성 평택", "fee": 2000000}, {"from": "이엔피 리치", "to": "삼성 오산", "fee": 2000000}]}, {"vehicle": "대전89바 3454", "routes": [{"from": "네이쳐스", "to": "CJ수원", "fee": 3400000}, {"from": "건우물류 리치", "to": "CJ수원", "fee": 3400000}, {"from": "지오물류 리치", "to": "삼성 오산", "fee": 2500000}]}, {"vehicle": "경기91자 5932", "routes": [{"from": "경한물류", "to": "대한 동탄", "fee": 3800000}, {"from": "건우물류 리치", "to": "CJ수원", "fee": 800000}, {"from": "이엔피 리치", "to": "CJ동탄", "fee": 4000000}, {"from": "건우물류 리치", "to": "삼성 오산", "fee": 2500000}]}, {"vehicle": "경기86사 6814", "routes": [{"from": "버드상사", "to": "평택,오산", "fee": 4100000}, {"from": "버드상사", "to": "CJ수원", "fee": 4300000}]}, {"vehicle": "서울85아 4743", "routes": [{"from": "두웰로지스", "to": "CJ수원", "fee": 3500000}, {"from": "두웰로지스", "to": "아워홈 용인", "fee": 2800000}]}, {"vehicle": "서울85바 7035", "routes": [{"from": "한창농산", "to": "CJ동탄", "fee": 3500000}]}, {"vehicle": "경기93아 6615", "routes": [{"from": "네이쳐스", "to": "CJ이천", "fee": 3000000}, {"from": "헤아림", "to": "삼성 평택", "fee": 4500000}]}, {"vehicle": "경기93사 5063", "routes": [{"from": "인천 수협", "to": "CJ수원", "fee": 4500000}]}, {"vehicle": "서울85바 8518", "routes": [{"from": "이엔피 리치", "to": "삼성 오산", "fee": 2200000}]}, {"vehicle": "경기91바 6218", "routes": [{"from": "두웰로지스", "to": "CJ동탄 2회", "fee": 6000000}]}, {"vehicle": "경기96자 1321", "routes": [{"from": "우린", "to": "CJ이천", "fee": 2800000}]}, {"vehicle": "서울90바 5748", "routes": [{"from": "경한물류", "to": "CJ이천 1호", "fee": 3500000}]}, {"vehicle": "경기80자 1764", "routes": [{"from": "모하지", "to": "CJ이천", "fee": 3000000}]}, {"vehicle": "경기94자 5674", "routes": [{"from": "네이쳐스", "to": "CJ수원", "fee": 3200000}, {"from": "이엔피 리치", "to": "CJ이천", "fee": 3800000}, {"from": "싱그람", "to": "롯데 오산", "fee": 4000000}]}, {"vehicle": "경기80바 1555", "routes": [{"from": "카자", "to": "삼성 평택", "fee": 3300000}]}, {"vehicle": "경기94자 5698", "routes": [{"from": "수원원예 농협", "to": "CJ수원", "fee": 3300000}]}, {"vehicle": "경기94자 1578", "routes": [{"from": "명현유통", "to": "CJ동탄", "fee": 4500000}]}, {"vehicle": "경기93아 6048", "routes": [{"from": "명현유통", "to": "삼성 용인", "fee": 4200000}]}, {"vehicle": "경기80바5484", "routes": [{"from": "인천 수협", "to": "CJ이천", "fee": 4200000}]}, {"vehicle": "서울87아 8259", "routes": [{"from": "수원원예 농협", "to": "서브웨이", "fee": 3000000}, {"from": "수원원예 농협", "to": "건우간선 1호", "fee": 2300000}, {"from": "건우물류 리치", "to": "CJ동탄", "fee": 2750000}, {"from": "이엔피 리치", "to": "CJ동탄", "fee": 1250000}, {"from": "하늘푸드 휴무", "to": "이엔피 리치", "fee": 1000000}]}, {"vehicle": "경기86사 6653", "routes": [{"from": "이엔피 리치", "to": "동서울", "fee": 4400000}]}, {"vehicle": "경기80바 5452", "routes": [{"from": "이엔피 리치", "to": "동서울", "fee": 4400000}]}, {"vehicle": "경기91자 7924", "routes": [{"from": "루트팜", "to": "김용재 원곡", "fee": 1300000}, {"from": "김용재 원곡", "to": "CJ동탄", "fee": 4000000}]}, {"vehicle": "서울86바 2427", "routes": [{"from": "네이쳐스", "to": "CJ동탄", "fee": 3400000}, {"from": "버드상사", "to": "백암 대상", "fee": 5000000}, {"from": "버드상사", "to": "삼성 오산", "fee": 4500000}]}, {"vehicle": "경기82바 8490", "routes": [{"from": "두웰로지스", "to": "삼성 오산", "fee": 4000000}]}, {"vehicle": "경기94자 2459", "routes": [{"from": "경한물류", "to": "CJ이천 2호", "fee": 3500000}]}, {"vehicle": "경기89바 1247", "routes": [{"from": "카자", "to": "CJ동탄", "fee": 3800000}]}, {"vehicle": "경기94아 5902", "routes": [{"from": "경한물류", "to": "CJ동탄 1호", "fee": 4000000}]}, {"vehicle": "경기92자 5619", "routes": [{"from": "맑은해오름", "to": "이엔피 리치", "fee": 3500000}, {"from": "수원원예 농협", "to": "CJ동탄", "fee": 3200000}]}, {"vehicle": "서울88아 3872", "routes": [{"from": "이엔피 리치", "to": "삼성 평택", "fee": 2000000}, {"from": "이엔피 리치", "to": "삼성 오산", "fee": 2100000}]}, {"vehicle": "서울80바 8031", "routes": [{"from": "하늘푸드 2회", "to": "이엔피 리치", "fee": 3200000}, {"from": "수원원예 농협", "to": "풀무원 양지", "fee": 3200000}, {"from": "경한물류", "to": "CJ수원 1호", "fee": 3800000}]}, {"vehicle": "전남84바 3255", "routes": [{"from": "수원원예 농협", "to": "건우이관 2호", "fee": 2500000}, {"from": "건우물류 리치", "to": "삼성 평택", "fee": 1800000}]}, {"vehicle": "경기93아2951", "routes": [{"from": "경한물류", "to": "삼성 평택", "fee": 4500000}]}, {"vehicle": "경기89아2753", "routes": [{"from": "경한물류", "to": "CJ동탄", "fee": 1975384}]}];
+
+function search(){
+let val=document.getElementById('search').value.trim();
+
+if(val.length !== 4){
+document.getElementById('result').innerHTML="⚠️ 4자리 입력하세요";
+return;
+}
+
+let res=data.filter(d=>d.vehicle.slice(-4) === val);
+
+if(res.length === 0){
+document.getElementById('result').innerHTML="❌ 검색 결과 없음";
+return;
+}
+
+let html="";
+
+res.forEach(item=>{
+html+="<h3>차량번호: "+item.vehicle+"</h3>";
+html+="<table><tr><th>상차지</th><th>하차지</th><th>운송료</th></tr>";
+
+let total=0;
+
+item.routes.forEach(r=>{
+html+=`<tr><td>${r.from}</td><td>${r.to}</td><td>${r.fee.toLocaleString()}</td></tr>`;
+total+=r.fee;
+});
+
+html+=`<tr><th colspan="2">총합</th><th>${total.toLocaleString()}</th></tr></table>`;
+});
+
+document.getElementById('result').innerHTML=html;
+}
+</script>
+
+</body>
+</html>
